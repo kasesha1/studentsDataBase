@@ -64,11 +64,31 @@ void sortByNameDesc(std::vector<Student>& database) {
     std::cout << "Сортировка по имени (по убыванию) завершена.\n";
 }
 
+// Функция для сортировки по среднему баллу (по возрастанию)
+void sortByGPA(std::vector<Student>& database) {
+    std::sort(database.begin(), database.end(), 
+        [](const Student& a, const Student& b) {
+            return a.gpa < b.gpa;
+        });
+    std::cout << "Сортировка по среднему баллу завершена.\n";
+}
+
+// Функция для сортировки по среднему баллу (по убыванию)
+void sortByGPADesc(std::vector<Student>& database) {
+    std::sort(database.begin(), database.end(), 
+        [](const Student& a, const Student& b) {
+            return a.gpa > b.gpa;
+        });
+    std::cout << "Сортировка по среднему баллу (по убыванию) завершена.\n";
+}
+
 // Функция для отображения меню сортировки
 void showSortMenu() {
     std::cout << "\nМеню сортировки:\n";
     std::cout << "1. Сортировать по имени (А-Я)\n";
     std::cout << "2. Сортировать по имени (Я-А)\n";
+    std::cout << "3. Сортировать по среднему баллу (по возрастанию)\n";
+    std::cout << "4. Сортировать по среднему баллу (по убыванию)\n";
     std::cout << "0. Назад в главное меню\n";
     std::cout << "Выберите действие: ";
 }
@@ -105,6 +125,12 @@ int main() {
                             break;
                         case 2:
                             sortByNameDesc(database);
+                            break;
+                        case 3:
+                            sortByGPA(database);
+                            break;
+                        case 4:
+                            sortByGPADesc(database);
                             break;
                         case 0:
                             std::cout << "Возврат в главное меню.\n";
