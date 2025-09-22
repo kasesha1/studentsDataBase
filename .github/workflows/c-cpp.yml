@@ -23,7 +23,7 @@ jobs:
     
     - name: Run tests
       run: |
-        ./a.out | grep -q "Все тесты пройдены успешно!"
+        ./student_db | grep -q "Все тесты пройдены успешно!"
         if [ $? -eq 0 ]; then
           echo "✔ Все тесты прошли успешно!"
         else
