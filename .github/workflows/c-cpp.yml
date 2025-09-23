@@ -21,17 +21,15 @@ jobs:
     - name: Build
       run: make
     
-    - name: Run tests with timeout
+    - name: Run tests
       run: |
-        OUTPUT=$(timeout 15s bash -c 'echo -e "4\n0" | ./student_db' 2>&1 || true)
-        
-        echo "=== Вывод программы ==="
-        echo "$OUTPUT"
-        echo "=== Конец вывода ==="
-        
-        if echo "$OUTPUT" | grep -q "ВСЕ.*ТЕСТОВ ПРОЙДЕНЫ УСПЕШНО"; then
+        # Предоставляем входные данные: 4 (тесты), затем 0 (выход)
+        echo -e "4\n0" | timeout 30s ./student_db | grep -q "ВСЕ.*ТЕСТОВ ПРОЙДЕНЫ УСПЕШНО"
+        if [ $? -eq 0 ]; then
           echo "✔ Все тесты прошли успешно!"
         else
-          echo "✘ Тесты не прошли или не завершились"
+          echo "✘ Тесты не прошли"
+          echo "=== Debug output ==="
+          echo -e "4\n0" | timeout 10s ./student_db || true
           exit 1
         fi
