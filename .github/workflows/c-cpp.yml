@@ -13,20 +13,25 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Build and test
+    - name: Set up GCC
       run: |
         sudo apt-get update
         sudo apt-get install -y g++
-        g++ -std=c++20 -o student_db main.cpp
+    
+    - name: Build
+      run: make
+    
+    - name: Run tests with timeout
+      run: |
+        OUTPUT=$(timeout 15s bash -c 'echo -e "4\n0" | ./student_db' 2>&1 || true)
         
-        # Простая проверка: программа должна запуститься и завершиться
-        echo "0" | timeout 5s ./student_db
-        echo "✔ Базовая проверка пройдена"
+        echo "=== Вывод программы ==="
+        echo "$OUTPUT"
+        echo "=== Конец вывода ==="
         
-        # Проверка тестов
-        TEST_OUTPUT=$(echo -e "4\n0" | timeout 10s ./student_db 2>&1 || true)
-        echo "$TEST_OUTPUT" | head -20  # Показываем первые 20 строк вывода
-        
-        if echo "$TEST_OUTPUT" | grep -q -i "тест"; then
-          echo "✔ Тесты запущены"
+        if echo "$OUTPUT" | grep -q "ВСЕ.*ТЕСТОВ ПРОЙДЕНЫ УСПЕШНО"; then
+          echo "✔ Все тесты прошли успешно!"
+        else
+          echo "✘ Тесты не прошли или не завершились"
+          exit 1
         fi
