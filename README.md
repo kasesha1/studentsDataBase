@@ -1,5 +1,5 @@
-![Code Coverage](https://img.shields.io/badge/Coverage-92%25-brightgreen)
-![CI](https://github.com/kasesha1/studentsDataBase/actions/workflows/coverage.yml/badge.svg)
+![Code Coverage](COVERAGE.md)
+
 
 ## Описание
 Простая база данных студентов на C++ с функциями сортировки.
