@@ -1,4 +1,4 @@
-![Code Coverage](https://img.shields.io/badge/Coverage-92%25-brightgreen)
+![Code Coverage](https://img.shields.io/badge/Coverage%25-brightgreen)
 ![CI](https://github.com/kasesha1/studentsDataBase/actions/workflows/coverage.yml/badge.svg)
 
 ## Описание
