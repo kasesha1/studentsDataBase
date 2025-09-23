@@ -1,0 +1,107 @@
+name: C/C++ CI with Coverage
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]  
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          sudo apt-get update
+          sudo apt-get install -y g++ build-essential
+        fi
+    
+    - name: Build project
+      run: |
+        make
+        ls -la
+    
+    - name: Run basic tests
+      id: test
+      run: |
+        chmod +x student_db
+        # Запускаем тесты через меню программы
+        echo -e "4\n0" | timeout 30s ./student_db
+        echo "✔ Basic tests completed"
+    
+    - name: Calculate code coverage
+      if: matrix.os == 'ubuntu-latest'
+      id: covr
+      run: |
+        sudo apt install -y gcovr
+        
+        g++ --coverage -g -O0 -fprofile-arcs -ftest-coverage -std=c++20 -o student_db_cov main.cpp
+        
+        echo -e "4\n0" | timeout 30s ./student_db_cov || true
+        
+        gcovr --xml coverage.cobertura.xml --root .
+        
+        gcovr --root .
+    
+    - name: Generate Code Coverage Report
+      if: matrix.os == 'ubuntu-latest'
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: coverage.cobertura.xml
+        badge: true
+        fail_below_min: false
+        format: markdown
+        hide_branch_rate: false
+        hide_complexity: true
+        indicators: true
+        output: both
+        thresholds: '60 80'
+    
+    - name: Add Coverage PR Comment
+      if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest'
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        path: code-coverage-results.md
+    
+    - name: Extract coverage value
+      if: matrix.os == 'ubuntu-latest'
+      id: get_coverage
+      run: |
+        COVVALUE=$(grep 'Summary' code-coverage-results.md | awk '{print $3}' | tr -d '*%' || echo "0")
+        echo "Coverage percentage: $COVVALUE%"
+        echo "COVERAGE=$COVVALUE" >> $GITHUB_ENV
+    
+    - name: Create Coverage Badge
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        COVERAGE=${COVERAGE:-0}
+        
+        if [ $COVERAGE -ge 80 ]; then
+          COLOR="brightgreen"
+        elif [ $COVERAGE -ge 60 ]; then
+          COLOR="yellow"
+        else
+          COLOR="red"
+        fi
+        
+        curl -s "https://img.shields.io/badge/Code%20Coverage-${COVERAGE}%25-${COLOR}" > coverage.svg
+        
+        echo "✔ Coverage badge generated: $COVERAGE%"
+    
+    - name: Commit coverage badge
+      if: matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/main'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add coverage.svg
+        git diff --staged --quiet || git commit -m " Update coverage badge: ${COVERAGE}%"
+        git push
