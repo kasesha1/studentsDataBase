@@ -6,8 +6,6 @@ SRC = main.cpp
 $(TARGET): $(SRC)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC)
 
-coverage: $(SRC)
-	$(CXX) $(CXXFLAGS) --coverage -fprofile-arcs -ftest-coverage -o $(TARGET)_cov $(SRC)
 
 test: $(TARGET)
 	./$(TARGET)
