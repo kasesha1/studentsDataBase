@@ -6,10 +6,13 @@ SRC = main.cpp
 $(TARGET): $(SRC)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC)
 
+coverage: $(SRC)
+	$(CXX) $(CXXFLAGS) --coverage -fprofile-arcs -ftest-coverage -o $(TARGET)_cov $(SRC)
+
 test: $(TARGET)
-	./$(TARGET)  # Можно добавить специальный режим для тестов
+	./$(TARGET)
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) $(TARGET)_cov *.gcno *.gcda *.gcov
 
-.PHONY: test clean
+.PHONY: test clean coverage
