@@ -16,13 +16,11 @@ struct Student {
 void addStudent(std::vector<Student>& database) {
     Student student;
     std::cout << "Введите имя студента: ";
-    std::cin.ignore(); 
-    std::getline(std::cin, student.name);
+    std::cin >> student.name;
     std::cout << "Введите возраст студента: ";
     std::cin >> student.age;
     std::cout << "Введите специальность студента: ";
-    std::cin.ignore();
-    std::getline(std::cin, student.major);
+    std::cin >> student.major;
     std::cout << "Введите средний балл студента: ";
     std::cin >> student.gpa;
 
@@ -155,8 +153,8 @@ void runTests() {
     
     // Тест 5: Пустая база данных (граничный случай)
     std::vector<Student> emptyDb;
-    sortByName(emptyDb);    // Не должно вызывать ошибок
-    sortByGPADesc(emptyDb); // Не должно вызывать ошибок
+    sortByName(emptyDb);    
+    sortByGPADesc(emptyDb); 
     std::cout << " Тест 5: Работа с пустой базой данных пройден\n";
     
     // Тест 6: Одинаковые имена (дополнительный тест)
