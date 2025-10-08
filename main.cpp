@@ -46,39 +46,44 @@ void displayStudents(const std::vector<Student>& database) {
     }
 }
 
+// Простые функции сравнения вместо лямбд
+bool compareByNameAsc(const Student& a, const Student& b) {
+    return a.name < b.name;
+}
+
+bool compareByNameDesc(const Student& a, const Student& b) {
+    return a.name > b.name;
+}
+
+bool compareByGPAAsc(const Student& a, const Student& b) {
+    return a.gpa < b.gpa;
+}
+
+bool compareByGPADesc(const Student& a, const Student& b) {
+    return a.gpa > b.gpa;
+}
+
 // Функция для сортировки по имени (по возрастанию)
 void sortByName(std::vector<Student>& database) {
-    std::sort(database.begin(), database.end(), 
-        [](const Student& a, const Student& b) {
-            return a.name < b.name;
-        });
+    std::sort(database.begin(), database.end(), compareByNameAsc);
     std::cout << "Сортировка по имени завершена.\n";
 }
 
 // Функция для сортировки по имени (по убыванию)
 void sortByNameDesc(std::vector<Student>& database) {
-    std::sort(database.begin(), database.end(), 
-        [](const Student& a, const Student& b) {
-            return a.name > b.name;
-        });
+    std::sort(database.begin(), database.end(), compareByNameDesc);
     std::cout << "Сортировка по имени (по убыванию) завершена.\n";
 }
 
 // Функция для сортировки по среднему баллу (по возрастанию)
 void sortByGPA(std::vector<Student>& database) {
-    std::sort(database.begin(), database.end(), 
-        [](const Student& a, const Student& b) {
-            return a.gpa < b.gpa;
-        });
+    std::sort(database.begin(), database.end(), compareByGPAAsc);
     std::cout << "Сортировка по среднему баллу завершена.\n";
 }
 
 // Функция для сортировки по среднему баллу (по убыванию)
 void sortByGPADesc(std::vector<Student>& database) {
-    std::sort(database.begin(), database.end(), 
-        [](const Student& a, const Student& b) {
-            return a.gpa > b.gpa;
-        });
+    std::sort(database.begin(), database.end(), compareByGPADesc);
     std::cout << "Сортировка по среднему баллу (по убыванию) завершена.\n";
 }
 
@@ -107,7 +112,7 @@ void runTests() {
     assert(testDb1[0].name == "Анастасия");
     assert(testDb1[1].name == "Иван");
     assert(testDb1[2].name == "Станислав");
-    std::cout << "✔ Тест 1: Сортировка по имени (А-Я) пройден\n";
+    std::cout << " Тест 1: Сортировка по имени (А-Я) пройден\n";
     
     // Тест 2: Сортировка по имени (по убыванию)
     std::vector<Student> testDb2 = {
@@ -120,7 +125,7 @@ void runTests() {
     assert(testDb2[0].name == "Станислав");
     assert(testDb2[1].name == "Иван");
     assert(testDb2[2].name == "Анастасия");
-    std::cout << "✔ Тест 2: Сортировка по имени (Я-А) пройден\n";
+    std::cout << " Тест 2: Сортировка по имени (Я-А) пройден\n";
     
     // Тест 3: Сортировка по среднему баллу (по возрастанию)
     std::vector<Student> testDb3 = {
@@ -133,7 +138,7 @@ void runTests() {
     assert(testDb3[0].gpa == 73.5);
     assert(testDb3[1].gpa == 73.8);
     assert(testDb3[2].gpa == 84.0);
-    std::cout << "✔ Тест 3: Сортировка по GPA (возрастание) пройден\n";
+    std::cout << " Тест 3: Сортировка по GPA (возрастание) пройден\n";
     
     // Тест 4: Сортировка по среднему баллу (по убыванию)
     std::vector<Student> testDb4 = {
@@ -146,13 +151,13 @@ void runTests() {
     assert(testDb4[0].gpa == 84.0);
     assert(testDb4[1].gpa == 73.8);
     assert(testDb4[2].gpa == 73.5);
-    std::cout << "✔ Тест 4: Сортировка по GPA (убывание) пройден\n";
+    std::cout << " Тест 4: Сортировка по GPA (убывание) пройден\n";
     
     // Тест 5: Пустая база данных (граничный случай)
     std::vector<Student> emptyDb;
     sortByName(emptyDb);    // Не должно вызывать ошибок
     sortByGPADesc(emptyDb); // Не должно вызывать ошибок
-    std::cout << "✔ Тест 5: Работа с пустой базой данных пройден\n";
+    std::cout << " Тест 5: Работа с пустой базой данных пройден\n";
     
     // Тест 6: Одинаковые имена (дополнительный тест)
     std::vector<Student> sameNamesDb = {
@@ -165,7 +170,7 @@ void runTests() {
     assert(sameNamesDb[0].name == "Анастасия");
     assert(sameNamesDb[1].name == "Иван");
     assert(sameNamesDb[2].name == "Иван");
-    std::cout << "✔ Тест 6: Сортировка с одинаковыми именами пройден\n";
+    std::cout << " Тест 6: Сортировка с одинаковыми именами пройден\n";
     
     std::cout << "=== ВСЕ 6 ТЕСТОВ ПРОЙДЕНЫ УСПЕШНО! ===\n\n";
 }
