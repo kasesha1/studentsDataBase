@@ -1,23 +1,16 @@
 CXX = g++
 CXXFLAGS = -std=c++20 -Wall -Wextra
 TARGET = student_db
-TEST_TARGET = student_tests
-MAIN_SRC = main.cpp
-TEST_SRC = tests.cpp
+SRC = main.cpp
 
-# Основная программа
-$(TARGET): $(MAIN_SRC)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(MAIN_SRC)
+$(TARGET): $(SRC)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC)
 
-# Google Tests
-$(TEST_TARGET): $(TEST_SRC)
-	$(CXX) $(CXXFLAGS) -I/usr/include/gtest -L/usr/lib/x86_64-linux-gnu $(TEST_SRC) -lgtest -lpthread -o $(TEST_TARGET)
 
-# Запуск Google Tests
-test: $(TEST_TARGET)
-	./$(TEST_TARGET)
+test: $(TARGET)
+	./$(TARGET)
 
 clean:
-	rm -f $(TARGET) $(TEST_TARGET) *.gcno *.gcda *.gcov
+	rm -f $(TARGET) $(TARGET)_cov *.gcno *.gcda *.gcov
 
-.PHONY: test run-app-tests clean
+.PHONY: test clean coverage
