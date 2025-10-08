@@ -46,7 +46,7 @@ void displayStudents(const std::vector<Student>& database) {
     }
 }
 
-// Простые функции сравнения вместо лямбд
+// Простые функции сравнения 
 bool compareByNameAsc(const Student& a, const Student& b) {
     return a.name < b.name;
 }
