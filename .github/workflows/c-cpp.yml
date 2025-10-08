@@ -2,37 +2,34 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main"]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main"]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
     
-    - name: Install dependencies
+    - name: Set up GCC
       run: |
         sudo apt-get update
-        sudo apt-get install -y g++ libgtest-dev
-        
-    - name: Build main program
+        sudo apt-get install -y g++
+    
+    - name: Build
       run: make
-      
-    - name: Build tests using Makefile
+    
+    - name: Run tests
       run: |
-        # Если в Makefile есть цель для тестов
-        make test || echo "Цель test не найдена в Makefile"
-        
-    - name: Run Google Tests
-      run: |
-        # Если tests скомпилировались через Makefile
-        if [ -f "./student_tests" ]; then
-          ./student_tests
+        # Предоставляем входные данные: 4 (тесты), затем 0 (выход)
+        echo -e "4\n0" | timeout 30s ./student_db | grep -q "ВСЕ.*ТЕСТОВ ПРОЙДЕНЫ УСПЕШНО"
+        if [ $? -eq 0 ]; then
+          echo " Все тесты прошли успешно!"
         else
-          # Компилируем напрямую
-          g++ -std=c++20 -pthread tests.cpp -lgtest -lgtest_main -o student_tests
-          ./student_tests
+          echo " Тесты не прошли"
+          echo "=== Debug output ==="
+          echo -e "4\n0" | timeout 10s ./student_db || true
+          exit 1
         fi
